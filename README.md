@@ -16,3 +16,7 @@ Qualities of the resulting code :
 * [Django project](https://www.djangoproject.com/)
 * [Django settings](https://docs.djangoproject.com/en/dev/topics/settings/)
 * [Splitting up the settings file](https://code.djangoproject.com/wiki/SplitSettings)
+
+# License
+
+See LICENSE
