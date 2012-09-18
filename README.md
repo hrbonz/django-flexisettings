@@ -39,8 +39,8 @@ myproject/settings/__init__.py
                    settings.py
 ```
 
-* `__init__.py` contains all the black magic, HERE BE DRAGONS AND
-  UNICORNS.
+* `__init__.py` contains all the black magic, **HERE BE DRAGONS AND
+  UNICORNS**.
 * `env.py` has a single variable `RUN_ENV` that defines a running
   environment. This variable is then used to call different profiles of
   configuration depending on the running environment like `dev`, `stage`
