@@ -19,14 +19,14 @@ Qualities of the resulting code :
 $ git clone https://github.com/stefan-berder/django-flexisettings.git
 ```
 
-* copy the `settings/` folder to your project folder (where settings.py
+* copy the `settings/` folder to your project folder (where `settings.py`
   should be) :
 
 ```shell
 $ cp -r django-flexisetttings/settings /path/to/django/myproject/
 ```
 
-* copy `settings.py` in the `settings/` folder
+* copy `myproject/settings.py` in the `myproject/settings/` folder
 
 # Layout
 
