@@ -33,10 +33,10 @@ $ cp -r django-flexisetttings/settings /path/to/django/myproject/
 ```
 myproject/settings/__init__.py
                    env.py
-                   local_settings_RUN_ENV.py
                    security.py
                    security_RUN_ENV.py
                    settings.py
+                   settings_RUN_ENV.py
 ```
 
 * `__init__.py` contains all the black magic, **HERE BE DRAGONS AND
@@ -44,27 +44,30 @@ myproject/settings/__init__.py
 * `env.py` has a single variable `RUN_ENV` that defines a running
   environment. This variable is then used to call different profiles of
   configuration depending on the running environment like `dev`, `stage`
-  and `prod`.
-* `local_settings_RUN_ENV.py` gathers local settings for a given running
-  environment, settings defined here will override settings defined in
-  `settings.py`.
+  and `prod`. The `RUN_ENV` variable can also be set by environment, the environment takes precedence over `env.py`. Example :
+```shell
+$ export RUN_ENV='dev'; python manage.py runserver
+```
 * `security.py` holds all the common security variables for the project,
   probably a good place for `SECRET_KEY`.
 * `security_RUN_ENV` specific environment security variables, dedicated
   database passwords should go there. Setting defined here will override
   settings defined in `security.py`.
 * `settings.py` the classic settings file found in all django projects.
+* `settings_RUN_ENV.py` gathers local settings for a given running
+  environment, settings defined here will override settings defined in
+  `settings.py`.
 
 # Loading order
 
 The modules are loaded in the following order :
 
 1. `settings`
-2. `settings.env`
-3. `settings.security`
-4. `settings.security_RUN_ENV`
-5. `settings.settings`
-6. `settings.local_settings_RUN_ENV`
+2. `settings/env.py`
+3. `settings/security.py`
+4. `settings/security_RUN_ENV.py`
+5. `settings/settings.py`
+6. `settings/settings_RUN_ENV.py`
 
 # References
 
