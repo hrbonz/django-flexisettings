@@ -69,6 +69,10 @@ The modules are loaded in the following order :
 5. `settings/settings.py`
 6. `settings/settings_RUN_ENV.py`
 
+# Security files
+
+A very simple way to make sure that passwords are not pushed in your VCS is to exclude any file matching `settings/security*`. It would also be a good idea to reduce the access to such files by removing read rights for users other than the one running django.
+
 # References
 
 * [Django project](https://www.djangoproject.com/)
