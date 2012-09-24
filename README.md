@@ -71,7 +71,11 @@ The modules are loaded in the following order :
 
 # Security files
 
-A very simple way to make sure that passwords are not pushed in your VCS is to exclude any file matching `settings/security*`. It would also be a good idea to reduce the access to such files by removing read rights for users other than the one running django.
+A very simple way to make sure that passwords are not pushed in your VCS is to exclude any file matching `myproject/settings/security*`. It would also be a good idea to reduce the access to such files by removing read rights for users other than the one running django.
+
+# Miscellaneous
+
+Modifying the settings does not reload the server when using `manage.py runserver`. To do so, simply use the command `touch(1)` on `settings/__init__.py` or restart the server.
 
 # References
 
