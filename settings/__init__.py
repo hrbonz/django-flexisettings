@@ -12,7 +12,10 @@ SETTINGSPATH = os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
 # detect environment, if no settings/env.py or settings.env.ENV empty
 # keep defaults
 RUN_ENV = None
-exec(open(os.path.join(SETTINGSPATH, 'env.py')).read())
+try:
+    exec(open(os.path.join(SETTINGSPATH, 'env.py')).read())
+except IOError:
+    print "No env.py file found, trying to find RUN_ENV in shell environment."
 
 # environment declaration takes precendence, convenient to run some
 # quick tests
