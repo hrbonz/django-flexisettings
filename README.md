@@ -128,4 +128,4 @@ Modifying the settings does not reload the server when using `manage.py runserve
 
 # License
 
-See LICENSE
+django-flexisettings is published under a 3-clause BSD license, see LICENSE.
