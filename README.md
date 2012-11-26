@@ -28,6 +28,47 @@ $ cp -r django-flexisetttings/settings /path/to/django/myproject/
 
 * copy `myproject/settings.py` in the `myproject/settings/` folder
 
+* edit `env.py` to set the working environment, let's use `prod` here :
+
+```shell
+$ cat myproject/settings/env.py
+# environment declaration
+RUN_ENV = 'prod'
+```
+
+* edit `security.py` to set the `SECRET_KEY` value :
+
+```shell
+$ grep SECRET_KEY myproject/settings/security.py
+SECRET_KEY = 'alongandcomplexsecretstring'
+```
+
+* set security variables in `security_prod.py` to be used in any settings file.
+
+```shell
+$ grep DEFAULTDB myproject/settings/security_prod.py
+DEFAULTDB_USER = 'dbuser'
+DEFAULTDB_PWD = 'secret'
+```
+
+* edit `settings_prod.py` to override generic settings like `DATABASES`, `MEDIA_ROOT`, `TIME_ZONE`
+
+```shell
+$ cat myproject/settings/settings_prod.py
+[...]
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'mydb',                      # Or path to database file if using sqlite3.
+        'USER': DEFAULTDB_USER,                      # Not used with sqlite3.
+        'PASSWORD': DEFAULTDB_PWD,                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+[...]
+```
+
 # Layout
 
 ```
@@ -74,6 +115,8 @@ The modules are loaded in the following order :
 A very simple way to make sure that passwords are not pushed in your VCS is to exclude any file matching `myproject/settings/security*`. It would also be a good idea to reduce the access to such files by removing read rights for users other than the one running django.
 
 # Miscellaneous
+
+If the `RUN_ENV` variable is false in python, the only settings files read are `security.py` and `settings.py`.
 
 Modifying the settings does not reload the server when using `manage.py runserver`. To do so, simply use the command `touch(1)` on `settings/__init__.py` or restart the server.
 
