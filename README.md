@@ -120,6 +120,11 @@ If the `RUN_ENV` variable is false in python, the only settings files read are `
 
 Modifying the settings does not reload the server when using `manage.py runserver`. To do so, simply use the command `touch(1)` on `settings/__init__.py` or restart the server.
 
+Files that should not be pushed to your VCS are :
+
+* env.py : to allow for multiple environments to run at the same time and avoid problems with git pulls.
+* any security file : repeat after me, anu security data in your VCS is a **bad idea**.
+
 # References
 
 * [Django project](https://www.djangoproject.com/)
