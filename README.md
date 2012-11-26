@@ -16,7 +16,7 @@ Qualities of the resulting code :
 * Get the source code :
 
 ```shell
-$ git clone https://github.com/stefan-berder/django-flexisettings.git
+$ git clone https://github.com/hrbonz/django-flexisettings.git
 ```
 
 * copy the `settings/` folder to your project folder (where `settings.py`
