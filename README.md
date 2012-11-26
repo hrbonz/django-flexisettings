@@ -85,4 +85,4 @@ Modifying the settings does not reload the server when using `manage.py runserve
 
 # License
 
-See LICENSE
+See [LICENSE](LICENSE)
