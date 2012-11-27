@@ -2,7 +2,6 @@
 # All rights reserved.
 # Licensed under a 3-clause BSD license, see LICENSE
 
-# Django settings for fashionme_web project.
 import sys
 import os
 
