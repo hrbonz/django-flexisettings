@@ -2,6 +2,8 @@
 # All rights reserved.
 # Licensed under a 3-clause BSD license, see LICENSE
 
+__version__ = "0.1.1"
+
 import sys
 import os
 
@@ -22,7 +24,10 @@ if 'RUN_ENV' in os.environ:
     RUN_ENV = os.environ['RUN_ENV']
 
 # import default security file
-exec(open(os.path.join(SETTINGSPATH, 'security.py')).read())
+try:
+    exec(open(os.path.join(SETTINGSPATH, 'security.py')).read())
+except IOError:
+    print "No generic security file (security.py)."
 
 # import environment security files in locals()
 if RUN_ENV:
