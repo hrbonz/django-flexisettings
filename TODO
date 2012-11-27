@@ -1,3 +1,4 @@
 # django-flexisettings TODO
 
 * add support for an apps/ folder
+* add generic path helpers
