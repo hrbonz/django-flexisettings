@@ -24,7 +24,10 @@ if 'RUN_ENV' in os.environ:
     RUN_ENV = os.environ['RUN_ENV']
 
 # import default security file
-exec(open(os.path.join(SETTINGSPATH, 'security.py')).read())
+try:
+    exec(open(os.path.join(SETTINGSPATH, 'security.py')).read())
+except IOError:
+    print "No generic security file (security.py)."
 
 # import environment security files in locals()
 if RUN_ENV:
