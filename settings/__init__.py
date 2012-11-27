@@ -2,6 +2,8 @@
 # All rights reserved.
 # Licensed under a 3-clause BSD license, see LICENSE
 
+__version__ = "0.1.1"
+
 import sys
 import os
 
