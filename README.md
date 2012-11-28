@@ -123,7 +123,7 @@ Modifying the settings does not reload the server when using `manage.py runserve
 Files that should not be pushed to your VCS are :
 
 * `env.py` : to allow for multiple environments to run at the same time and avoid problems with git pulls. For this you can add `*/settings/env.py` in `.gitignore`.
-* any security file : repeat after me, anu security data in your VCS is a **bad idea**. For this you can add `*/settings/security*.py` in `.gitignore`.
+* any security file : repeat after me, any security data in your VCS is a **bad idea**. For this you can add `*/settings/security*.py` in `.gitignore`.
 
 # References
 
