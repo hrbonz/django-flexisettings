@@ -57,6 +57,8 @@ class ImportTestCase(unittest.TestCase):
         shutil.rmtree(self.test_folder)
 
 def suite():
+    # it is necessary to run those tests in that order to avoid
+    # namespace pollution with imported module
     tests = ['test_import_without_env', 'test_import']
     return unittest.TestSuite(map(ImportTestCase, tests))
 
