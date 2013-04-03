@@ -1,26 +1,11 @@
 import unittest
 import sys
 import os
-import shutil
 
-from django.core.management import call_command
+from tests.base import BaseTestCase
 
 
-class ImportTestCase(unittest.TestCase):
-
-    test_folder = 't'
-    test_project = 'testProject'
-    envvar = 'FLEXI_WRAPPED_MODULE'
-
-    def setUp(self):
-        # create test folder
-        os.mkdir(self.test_folder)
-        # create a sample project
-        call_command('startproject', self.test_project, self.test_folder)
-        # change current directory to test folder
-        os.chdir(self.test_folder)
-        # add this location to sys.path for import
-        sys.path.insert(0, os.getcwd())
+class ImportTestCase(BaseTestCase):
 
     def test_import_without_env(self):
         """Test importing flexisettings without setting environment
@@ -48,13 +33,6 @@ class ImportTestCase(unittest.TestCase):
             import flexisettings.settings
         except:
             self.fail(sys.exc_info()[1])
-
-    def tearDown(self):
-        if self.envvar in os.environ:
-            os.environ.pop(self.envvar)
-        sys.path.pop(0)
-        os.chdir('..')
-        shutil.rmtree(self.test_folder)
 
 def suite():
     # it is necessary to run those tests in that order to avoid
