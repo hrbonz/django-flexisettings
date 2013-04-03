@@ -1,4 +1,4 @@
-import unittest
+import unittest2
 import sys
 import os
 
@@ -38,9 +38,9 @@ def suite():
     # it is necessary to run those tests in that order to avoid
     # namespace pollution with imported module
     tests = ['test_import_without_env', 'test_import']
-    return unittest.TestSuite(map(ImportTestCase, tests))
+    return unittest2.TestSuite(map(ImportTestCase, tests))
 
 if __name__ == "__main__":
-    runner = unittest.TextTestRunner()
+    runner = unittest2.TextTestRunner()
     test_suite = suite()
     runner.run(test_suite)
