@@ -2,17 +2,13 @@
 import os
 import sys
 
-from django.utils import importlib
-
 ENVIRONMENT_VARIABLE = "FLEXI_WRAPPED_MODULE"
 
 
 class FlexiSettingsProxy(object):
 
-    _globals = {
-        # no running environment by default
-        'FLEXI_RUN_ENV': None,
-    }
+    _globals = {}
+    _settings_path = None
 
     def __init__(self):
         try:
@@ -26,13 +22,23 @@ class FlexiSettingsProxy(object):
             )
         self._settings_module = settings_module
 
-        try:
-            mod = importlib.import_module(self._settings_module)
-        except ImportError, e:
-            raise ImportError("Could not import settings '%s': %s" \
-                % (self._settings_module, e)
-            )
-        self._mod = mod
+        self._settings_path = self._get_mod_path(settings_module)
+
+        # import running environment
+        self._import('env')
+        # env variable supersedes file configuration
+        if 'FLEXI_RUN_ENV' in os.environ:
+            self._globals['FLEXI_RUN_ENV'] = os.environ['FLEXI_RUN_ENV']
+        # import security file
+        self._import('security')
+        # import running env security file
+        if 'FLEXI_RUN_ENV' in self._globals:
+            self._import('security_%s' % self._globals['FLEXI_RUN_ENV'])
+        # import main settings
+        self._import('settings', False)
+        # import running env settings
+        if 'FLEXI_RUN_ENV' in self._globals:
+            self._import('settings_%s' % self._globals['FLEXI_RUN_ENV'])
 
     # old-style class attribute lookup
     def __getattr__(self, name):
@@ -47,6 +53,45 @@ class FlexiSettingsProxy(object):
             return self._globals[name]
 
         return object.__getattribute__(self, name)
+
+    def __dir__(self):
+        return dir(object) + self._globals.keys()
+
+    def _get_package(self, module):
+        """return a package string extracted from a module import string.
+        This should work because the settings module should be on the
+        python import path, this is not using the django mechanism of
+        :code:`app.module`.
+        See https://docs.djangoproject.com/en/1.5/topics/settings/#envvar-DJANGO_SETTINGS_MODULE
+
+        :param module: a module string as used in import command
+        :type module: str
+        """
+        return '.'.join(module.split('.')[:-1])
+
+    def _get_mod_path(self, module):
+        package = self._get_package(module)
+        mod = __import__(package)
+        modfile = mod.__file__
+        if not modfile.startswith('/'):
+            modfile = os.path.abspath(modfile)
+        return os.path.dirname(modfile)
+
+    def _import(self, modname, quiet=True):
+        modfile = os.path.join(self._settings_path, modname) + '.py'
+        globals_dict = dict(globals().items() + self._globals.items())
+        # if the file doesn't exist but we want a quiet error
+        if not os.path.isfile(modfile) and quiet:
+            return
+
+        execfile(modfile, globals_dict)
+        # get which variables were set in modfile
+        settings = set(globals_dict.keys()) - set(globals().keys()) - \
+            set(self._globals.keys())
+        # push settings in _globals dict
+        for setting in settings:
+            if setting == setting.upper():
+                self._globals[setting] = globals_dict[setting]
 
 
 # trick to replace the module by a class instance
