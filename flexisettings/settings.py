@@ -8,8 +8,8 @@ ENVIRONMENT_VARIABLE = "FLEXI_WRAPPED_MODULE"
 class FlexiSettingsProxy(object):
     """Wrap configuration files following the app naming convention.
 
-    For this app to work, the environment viarable
-    'FLEXI_WRAPPED_MODULE' hos to be set and point to django's settings.
+    For this app to work, the environment vairable
+    'FLEXI_WRAPPED_MODULE' has to be set and point to django's settings.
     """
 
     _globals = {}
