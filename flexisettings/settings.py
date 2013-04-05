@@ -86,8 +86,7 @@ class FlexiSettingsProxy(object):
 
         execfile(modfile, globals_dict)
         # get which variables were set in modfile
-        settings = set(globals_dict.keys()) - set(globals().keys()) - \
-            set(self._globals.keys())
+        settings = set(globals_dict.keys()) - set(globals().keys())
         # push settings in _globals dict
         for setting in settings:
             if setting == setting.upper():
