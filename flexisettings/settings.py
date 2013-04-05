@@ -9,6 +9,7 @@ class FlexiSettingsProxy(object):
 
     _globals = {}
     _settings_path = None
+    _wrapped_modules = []
 
     def __init__(self):
         try:
@@ -91,6 +92,13 @@ class FlexiSettingsProxy(object):
         for setting in settings:
             if setting == setting.upper():
                 self._globals[setting] = globals_dict[setting]
+        # list this module as wrapped
+        self._wrapped_modules.append(
+            '.'.join([
+                self._get_package(self._settings_module),
+                modname
+            ])
+        )
 
 
 # trick to replace the module by a class instance
