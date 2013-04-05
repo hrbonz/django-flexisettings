@@ -6,6 +6,11 @@ ENVIRONMENT_VARIABLE = "FLEXI_WRAPPED_MODULE"
 
 
 class FlexiSettingsProxy(object):
+    """Wrap configuration files following the app naming convention.
+
+    For this app to work, the environment viarable
+    'FLEXI_WRAPPED_MODULE' hos to be set and point to django's settings.
+    """
 
     _globals = {}
     _settings_path = None
@@ -23,7 +28,7 @@ class FlexiSettingsProxy(object):
             )
         self._settings_module = settings_module
 
-        self._settings_path = self._get_mod_path(settings_module)
+        self._settings_path = self._get_mod_dir(settings_module)
 
         # import running environment
         self._import('env')
@@ -70,15 +75,29 @@ class FlexiSettingsProxy(object):
         """
         return '.'.join(module.split('.')[:-1])
 
-    def _get_mod_path(self, module):
+    def _get_mod_dir(self, module):
+        """return the module folder
+
+        :param module: a module string as used in import command
+        :type module: str
+        """
         package = self._get_package(module)
         mod = __import__(package)
         modfile = mod.__file__
+        #FIXME: this won't work on a non *NiX system
         if not modfile.startswith('/'):
             modfile = os.path.abspath(modfile)
         return os.path.dirname(modfile)
 
     def _import(self, modname, quiet=True):
+        """import settings module and push configuration values to global scope
+
+        :param modname: settings module name without package path, only
+        the last part of a dotted name
+        :type modname: str
+        :param quiet: quietly fail if settings file does not exist
+        :type quiet: bool
+        """
         modfile = os.path.join(self._settings_path, modname) + '.py'
         globals_dict = dict(globals().items() + self._globals.items())
         # if the file doesn't exist but we want a quiet error
