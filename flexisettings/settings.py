@@ -48,7 +48,7 @@ class FlexiSettingsProxy(object):
     # new-style class attribute lookup
     def __getattribute__(self, name):
         # break recursion when calling private attributes
-        if name.startswith('_'):
+        if name.startswith('_') and name != name.upper():
             return object.__getattribute__(self, name)
         if name in self._globals:
             return self._globals[name]
