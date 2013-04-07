@@ -30,21 +30,7 @@ class FlexiSettingsProxy(object):
 
         self._settings_path = self._get_mod_dir(settings_module)
 
-        # import running environment
-        self._import('env')
-        # env variable supersedes file configuration
-        if 'FLEXI_RUN_ENV' in os.environ:
-            self._globals['FLEXI_RUN_ENV'] = os.environ['FLEXI_RUN_ENV']
-        # import security file
-        self._import('security')
-        # import running env security file
-        if 'FLEXI_RUN_ENV' in self._globals:
-            self._import('security_%s' % self._globals['FLEXI_RUN_ENV'])
-        # import main settings
-        self._import('settings', False)
-        # import running env settings
-        if 'FLEXI_RUN_ENV' in self._globals:
-            self._import('settings_%s' % self._globals['FLEXI_RUN_ENV'])
+        self._import_settings()
 
     # old-style class attribute lookup
     def __getattr__(self, name):
@@ -88,6 +74,23 @@ class FlexiSettingsProxy(object):
         if not modfile.startswith('/'):
             modfile = os.path.abspath(modfile)
         return os.path.dirname(modfile)
+
+    def _import_settings(self, quiet=True):
+        # import running environment
+        self._import('env')
+        # env variable supersedes file configuration
+        if 'FLEXI_RUN_ENV' in os.environ:
+            self._globals['FLEXI_RUN_ENV'] = os.environ['FLEXI_RUN_ENV']
+        # import security file
+        self._import('security', quiet)
+        # import running env security file
+        if 'FLEXI_RUN_ENV' in self._globals:
+            self._import('security_%s' % self._globals['FLEXI_RUN_ENV'], quiet)
+        # import main settings
+        self._import('settings', False)
+        # import running env settings
+        if 'FLEXI_RUN_ENV' in self._globals:
+            self._import('settings_%s' % self._globals['FLEXI_RUN_ENV'], quiet)
 
     def _import(self, modname, quiet=True):
         """import settings module and push configuration values to global scope
