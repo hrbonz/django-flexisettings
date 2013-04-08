@@ -1,4 +1,3 @@
 # django-flexisettings TODO
 
-* add support for an apps/ folder
-* add generic path helpers
+* declare settings files as modules so autoreload would work
