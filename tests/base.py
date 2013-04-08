@@ -16,6 +16,8 @@ class BaseTestCase(unittest2.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        # get current folder
+        cls.current_dir = os.getcwd()
         # create test folder
         os.mkdir(cls.test_folder)
         # create a sample project
@@ -38,6 +40,11 @@ class BaseTestCase(unittest2.TestCase):
             'w')
         locset_fd.write("SECRET_KEY = _SECRET_KEY")
         locset_fd.close()
+        # add local apps, media, static, templates folders
+        os.mkdir(os.path.join(cls.test_folder, 'apps'))
+        os.mkdir(os.path.join(cls.test_folder, 'media'))
+        os.mkdir(os.path.join(cls.test_folder, 'static'))
+        os.mkdir(os.path.join(cls.test_folder, 'templates'))
         # add this location to sys.path for import
         sys.path.insert(0, os.path.join(os.getcwd(), cls.test_folder))
 

@@ -12,7 +12,9 @@ class FlexiSettingsProxy(object):
     'FLEXI_WRAPPED_MODULE' has to be set and point to django's settings.
     """
 
-    _globals = {}
+    _globals = {
+        'FLEXI_SYS_PATH': ['apps', 'lib'],
+    }
     _settings_path = None
     _wrapped_modules = []
 
@@ -27,10 +29,10 @@ class FlexiSettingsProxy(object):
                 % ENVIRONMENT_VARIABLE
             )
         self._settings_module = settings_module
-
         self._settings_path = self._get_mod_dir(settings_module)
 
         self._import_settings()
+        self._layout_discovery()
 
     # old-style class attribute lookup
     def __getattr__(self, name):
@@ -121,6 +123,59 @@ class FlexiSettingsProxy(object):
                 modname
             ])
         )
+
+    def _site_dir(self, folder):
+        return os.path.join(self._globals['FLEXI_SITE_PATH'], folder)
+
+    def _is_site_dir(self, folder):
+        return os.path.isdir(self._site_dir(folder))
+
+    def _project_dir(self, folder):
+        return os.path.join(self._globals['FLEXI_PROJECT_PATH'], folder)
+
+    def _is_project_dir(self, folder):
+        return os.path.isdir(self._project_dir(folder))
+
+    def _layout_discovery(self):
+        # if project path is not specified, assume it's under the
+        # settings folder
+        if 'FLEXI_PROJECT_PATH' not in self._globals:
+            self._globals['FLEXI_PROJECT_PATH'] = os.path.dirname(
+                self._settings_path)
+        self._project_path = self._globals['FLEXI_PROJECT_PATH']
+        # if site path is not specified, assume it is the same as
+        # project path
+        if 'FLEXI_SITE_PATH' not in self._globals:
+            self._globals['FLEXI_SITE_PATH'] = self._project_path
+        self._site_path = self._globals['FLEXI_SITE_PATH']
+
+        # add paths FLEXI_SYS_PATH to sys.path if they exist
+        for folder in self._globals['FLEXI_SYS_PATH']:
+            if self._is_project_dir(folder):
+                sys.path.insert(0, self._project_dir(folder))
+            elif self._is_site_dir(folder):
+                sys.path.insert(0, self._site_dir(folder))
+
+        # add media folder if MEDIA_ROOT is not already set or is empty
+        if 'MEDIA_ROOT' not in self._globals \
+            or not self._globals['MEDIA_ROOT']:
+            if self._is_site_dir('media'):
+                self._globals['MEDIA_ROOT'] = self._site_dir('media')
+            elif self._is_project_dir('media'):
+                self._globals['MEDIA_ROOT'] = self._project_dir('media')
+
+        # add static folder if STATIC_ROOT is not already set or is empty
+        if 'STATIC_ROOT' not in self._globals \
+            or not self._globals['STATIC_ROOT']:
+            if self._is_project_dir('static'):
+                self._globals['STATIC_ROOT'] = self._project_dir('static')
+
+        # add templates folder if not in TEMPLATE_DIRS
+        if self._is_project_dir('templates') \
+            not in self._globals['TEMPLATE_DIRS']:
+            self._globals['TEMPLATE_DIRS'] += (
+                self._project_dir('templates'),
+            )
 
 
 # trick to replace the module by a class instance
