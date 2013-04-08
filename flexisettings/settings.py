@@ -14,7 +14,7 @@ class FlexiSettingsProxy(object):
 
     _globals = {
         'FLEXI_SYS_PATH': ['apps', 'lib'],
-        'FLEXI_LAYOUT_DISCOVERY': True,
+        'FLEXI_LAYOUT_DISCOVERY': False,
     }
     _settings_path = None
     _wrapped_modules = []
