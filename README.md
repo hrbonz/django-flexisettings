@@ -33,37 +33,37 @@ This is all you need to get `flexisettings` to run your settings. Read further f
 
 # Configuration
 
-## `DJANGO_SETTINGS_MODULE`
+### DJANGO_SETTINGS_MODULE
 
 Environment variable to set to point at `flexisettings.settings`
 
-## `FLEXI_WRAPPED_MODULE`
+### FLEXI_WRAPPED_MODULE
 
 Environment variable to set to point at your django settings, this
 environment variable has to be set for `flexisettings` to work.
 
-## `FLEXI_RUN_ENV`
+### FLEXI_RUN_ENV
 
 String defining the running environment, used when trying to load
 settings depending on the defined running environment.
 
-## `FLEXI_SYS_PATH`
+### FLEXI_SYS_PATH
 
 List of paths to add to `sys.path` if they exist, defaults to `['apps',
 'lib']`. This will be done if `FLEXI_LAYOUT_DISCOVERY` is `True`.
 
-## `FLEXI_LAYOUT_DISCOVERY`
+### FLEXI_LAYOUT_DISCOVERY
 
 Boolean that determines if `flexisettings` tries to be smart about your
 project layout.
 
-## `FLEXI_SITE_ROOT`
+### FLEXI_SITE_ROOT
 
 Path to the site root, everything that should not be tracked in a VCS
 but is still part of your website. For example, the `MEDIA_ROOT` folder
 should reside in the site root.
 
-## `FLEXI_PROJECT_ROOT`
+### FLEXI_PROJECT_ROOT
 
 Path to the django project, basically everything that should be tracked
 in a VCS.
