@@ -13,7 +13,7 @@ class DiscoveryTestCase(BaseTestCase):
         """Test project path"""
         import flexisettings.settings
         self.assertEqual(
-            flexisettings.settings.FLEXI_PROJECT_PATH,
+            flexisettings.settings.FLEXI_PROJECT_ROOT,
             os.path.join(self.current_dir, self.test_folder)
         )
 
@@ -22,7 +22,7 @@ class DiscoveryTestCase(BaseTestCase):
         import flexisettings.settings
         import sys
         self.assertIn(
-            os.path.join(flexisettings.settings.FLEXI_PROJECT_PATH, 'apps'),
+            os.path.join(flexisettings.settings.FLEXI_PROJECT_ROOT, 'apps'),
             sys.path
         )
 

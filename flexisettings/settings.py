@@ -127,13 +127,13 @@ class FlexiSettingsProxy(object):
         )
 
     def _site_dir(self, folder):
-        return os.path.join(self._globals['FLEXI_SITE_PATH'], folder)
+        return os.path.join(self._globals['FLEXI_SITE_ROOT'], folder)
 
     def _is_site_dir(self, folder):
         return os.path.isdir(self._site_dir(folder))
 
     def _project_dir(self, folder):
-        return os.path.join(self._globals['FLEXI_PROJECT_PATH'], folder)
+        return os.path.join(self._globals['FLEXI_PROJECT_ROOT'], folder)
 
     def _is_project_dir(self, folder):
         return os.path.isdir(self._project_dir(folder))
@@ -141,15 +141,15 @@ class FlexiSettingsProxy(object):
     def _layout_discovery(self):
         # if project path is not specified, assume it's under the
         # settings folder
-        if 'FLEXI_PROJECT_PATH' not in self._globals:
-            self._globals['FLEXI_PROJECT_PATH'] = os.path.dirname(
+        if 'FLEXI_PROJECT_ROOT' not in self._globals:
+            self._globals['FLEXI_PROJECT_ROOT'] = os.path.dirname(
                 self._settings_path)
-        self._project_path = self._globals['FLEXI_PROJECT_PATH']
+        self._project_path = self._globals['FLEXI_PROJECT_ROOT']
         # if site path is not specified, assume it is the same as
         # project path
-        if 'FLEXI_SITE_PATH' not in self._globals:
-            self._globals['FLEXI_SITE_PATH'] = self._project_path
-        self._site_path = self._globals['FLEXI_SITE_PATH']
+        if 'FLEXI_SITE_ROOT' not in self._globals:
+            self._globals['FLEXI_SITE_ROOT'] = self._project_path
+        self._site_path = self._globals['FLEXI_SITE_ROOT']
 
         # add paths FLEXI_SYS_PATH to sys.path if they exist
         for folder in self._globals['FLEXI_SYS_PATH']:
