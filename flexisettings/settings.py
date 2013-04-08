@@ -14,6 +14,7 @@ class FlexiSettingsProxy(object):
 
     _globals = {
         'FLEXI_SYS_PATH': ['apps', 'lib'],
+        'FLEXI_LAYOUT_DISCOVERY': True,
     }
     _settings_path = None
     _wrapped_modules = []
@@ -32,7 +33,8 @@ class FlexiSettingsProxy(object):
         self._settings_path = self._get_mod_dir(settings_module)
 
         self._import_settings()
-        self._layout_discovery()
+        if self._globals['FLEXI_LAYOUT_DISCOVERY']:
+            self._layout_discovery()
 
     # old-style class attribute lookup
     def __getattr__(self, name):
@@ -167,7 +169,9 @@ class FlexiSettingsProxy(object):
         # add static folder if STATIC_ROOT is not already set or is empty
         if 'STATIC_ROOT' not in self._globals \
             or not self._globals['STATIC_ROOT']:
-            if self._is_project_dir('static'):
+            if self._is_site_dir('static'):
+                self._globals['STATIC_ROOT'] = self._site_dir('static')
+            elif self._is_project_dir('static'):
                 self._globals['STATIC_ROOT'] = self._project_dir('static')
 
         # add templates folder if not in TEMPLATE_DIRS
