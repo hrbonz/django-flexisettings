@@ -83,6 +83,12 @@ class FlexiSettingsProxy(object):
         return os.path.dirname(modfile)
 
     def _import_settings(self, quiet=True):
+        """Get the settings imported in the proper order and depending
+        on FLEXI_RUN_ENV variable.
+
+        :param quiet: quietly fail if settings file does not exist
+        :type quiet: bool
+        """
         # import running environment
         self._import('env')
         # env variable supersedes file configuration
@@ -101,6 +107,13 @@ class FlexiSettingsProxy(object):
 
     def _import(self, modname, quiet=True):
         """import settings module and push configuration values to global scope
+
+        The import order is as follow:
+            * env.py
+            * security.py
+            * security_<FLEXI_RUN_ENV>.py, if FLEXI_RUN_ENV is set
+            * settings.py, raises an IOError exception if missing
+            * settings_<FLEXI_RUN_ENV>.py, if FLEXI_RUN_ENV is set
 
         :param modname: settings module name without package path, only
         the last part of a dotted name
@@ -130,18 +143,49 @@ class FlexiSettingsProxy(object):
         )
 
     def _site_dir(self, folder):
+        """return an absolute path for a folder inside FLEXI_SITE_ROOT.
+
+        :param folder: a folder name
+        :type folder: str
+        """
         return os.path.join(self._globals['FLEXI_SITE_ROOT'], folder)
 
     def _is_site_dir(self, folder):
+        """returns a True if folder exists inside FLEXI_SITE_ROOT
+        folder.
+
+        :param folder: a folder name
+        :type folder: str
+        """
         return os.path.isdir(self._site_dir(folder))
 
     def _project_dir(self, folder):
+        """return an absolute path for a folder inside
+        FLEXI_PROJECT_ROOT.
+
+        :param folder: a folder name
+        :type folder: str
+        """
         return os.path.join(self._globals['FLEXI_PROJECT_ROOT'], folder)
 
     def _is_project_dir(self, folder):
+        """returns a True if folder exists inside FLEXI_PROJECT_ROOT
+        folder.
+
+        :param folder: a folder name
+        :type folder: str
+        """
         return os.path.isdir(self._project_dir(folder))
 
     def _layout_discovery(self):
+        """perform layout detection:
+            * set FLEXI_PROJECT_ROOT
+            * set FLEXI_SITE_ROOT
+            * add folders from FLEXI_SYS_PATH to sys.path
+            * set MEDIA_ROOT
+            * set STATIC_ROOT
+            * add template folders to TEMPLATE_DIRS
+        """
         # if project path is not specified, assume it's under the
         # settings folder
         if 'FLEXI_PROJECT_ROOT' not in self._globals:
