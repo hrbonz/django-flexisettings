@@ -26,19 +26,20 @@ class BaseTestCase(unittest2.TestCase):
         env_fd = open(
             os.path.join(cls.test_folder, cls.test_project, 'env.py'),
             'w')
-        env_fd.write("FLEXI_RUN_ENV = 't'")
+        env_fd.write("FLEXI_RUN_ENV = 't'\n")
         env_fd.close()
         # create security file
         sec_fd = open(
             os.path.join(cls.test_folder, cls.test_project, 'security.py'),
             'w')
-        sec_fd.write("_SECRET_KEY = '%s'" % cls.secret_key)
+        sec_fd.write("_SECRET_KEY = '%s'\n" % cls.secret_key)
         sec_fd.close()
         # create local settings file
         locset_fd = open(
             os.path.join(cls.test_folder, cls.test_project, 'settings_t.py'),
             'w')
-        locset_fd.write("SECRET_KEY = _SECRET_KEY")
+        locset_fd.write("SECRET_KEY = _SECRET_KEY\n")
+        locset_fd.write("FLEXI_LAYOUT_DISCOVERY = True\n")
         locset_fd.close()
         # add local apps, media, static, templates folders
         os.mkdir(os.path.join(cls.test_folder, 'apps'))
