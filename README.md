@@ -35,38 +35,54 @@ Read further for more powerful features of `flexisettings`.
 
 # Configuration
 
-### DJANGO_SETTINGS_MODULE
+### DJANGO\_SETTINGS\_MODULE
 
 Environment variable to set to point at `flexisettings.settings`
 
-### FLEXI_WRAPPED_MODULE
+### FLEXI\_WRAPPED\_MODULE
 
 Environment variable to set to point at your django settings, this
 environment variable has to be set for `flexisettings` to work.
 
-### FLEXI_RUN_ENV
+### FLEXI\_RUN\_ENV
 
 String defining the running environment, used when trying to load
 settings depending on the defined running environment.
 
-### FLEXI_SYS_PATH
+### FLEXI\_SYS\_PATH
 
 List of paths to add to `sys.path` if they exist, defaults to `['apps',
 'lib']`. This will be done if `FLEXI_LAYOUT_DISCOVERY` is `True`.
 
-### FLEXI_LAYOUT_DISCOVERY
+### FLEXI\_LAYOUT\_DISCOVERY
 
 Boolean that determines if `flexisettings` tries to be smart about your
-project layout. It will add any 'media', 'static', 'templates' folder to the
-appropriate configuration variables if they are not already set.
+project layout. It will add any `FLEXI_MEDIA_FOLDER`, `FLEXI_STATIC_FOLDER`,
+`FLEXI_TEMPLATES_FOLDERS` folder to the appropriate configuration variables if
+they are not already set.
 
-### FLEXI_SITE_ROOT
+### FLEXI\_MEDIA\_FOLDER
+
+The media folder name to look for when doing layout discovery, defaults to
+`'media'`.
+
+### FLEXI\_STATIC\_FOLDER
+
+The static folder name to look for when doing layout discovery, defaults to
+`'static'`.
+
+### FLEXI\_TEMPLATES\_FOLDERS
+
+A tuple of templates folder names to look for when doing layout discovery,
+defaults to `('templates', )`.
+
+### FLEXI\_SITE\_ROOT
 
 Path to the site root, everything that should not be tracked in a VCS
 but is still part of your website. For example, the `MEDIA_ROOT` folder
 should reside in the site root.
 
-### FLEXI_PROJECT_ROOT
+### FLEXI\_PROJECT\_ROOT
 
 Path to the django project, basically everything that should be tracked
 in a VCS.
@@ -179,7 +195,10 @@ Files that should not be pushed to your VCS are :
 
 To help in the debugging process, it is possible to know which files have been included in the final settings object by accessing `flexisettings.settings._wrapped_modules`. An example from the unit tests, the project name is 'testProject' and the running environment is 't':
 
-```python
+```
+$ python manage.py shell
+[...]
+>>> import flexisettings.settings
 >>> flexisettings.settings._wrapped_modules
 ['testProject.env',
  'testProject.security',
