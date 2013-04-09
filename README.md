@@ -80,12 +80,13 @@ defaults to `('templates', )`.
 
 Path to the site root, everything that should not be tracked in a VCS
 but is still part of your website. For example, the `MEDIA_ROOT` folder
-should reside in the site root.
+should reside in the site root. This path defaults to
+`FLEX_PROJECT_ROOT`.
 
 ### FLEXI\_PROJECT\_ROOT
 
 Path to the django project, basically everything that should be tracked
-in a VCS.
+in a VCS. This path defaults to the `dirname()` of the settings folder.
 
 
 # Example configuration
