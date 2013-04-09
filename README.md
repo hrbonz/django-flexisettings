@@ -29,7 +29,9 @@ if __name__ == "__main__":
 [...]
 ```
 
-This is all you need to get `flexisettings` to run your settings. Read further for more powerful features of `flexisettings`.
+This is all you need to get `flexisettings` to run your settings. At this stage, **nothing** in the configuration object is changed, it is simply wrapped in `flexisettings` proxy object.
+
+Read further for more powerful features of `flexisettings`.
 
 # Configuration
 
@@ -55,7 +57,8 @@ List of paths to add to `sys.path` if they exist, defaults to `['apps',
 ### FLEXI_LAYOUT_DISCOVERY
 
 Boolean that determines if `flexisettings` tries to be smart about your
-project layout.
+project layout. It will add any 'media', 'static', 'templates' folder to the
+appropriate configuration variables if they are not already set.
 
 ### FLEXI_SITE_ROOT
 
@@ -171,6 +174,18 @@ Files that should not be pushed to your VCS are :
 * and avoid problems with git pulls. For this you can add `myproject/env.py` in `.gitignore`.
 * any security file : repeat after me, any security data in your VCS is
 * a **bad idea**. For this you can add `myproject/security*.py` in `.gitignore`.
+
+# Debugging
+
+To help in the debugging process, it is possible to know which files have been included in the final settings object by accessing `flexisettings.settings._wrapped_modules`. An example from the unit tests, the project name is 'testProject' and the running environment is 't':
+
+```python
+>>> flexisettings.settings._wrapped_modules
+['testProject.env',
+ 'testProject.security',
+ 'testProject.settings',
+ 'testProject.settings_t']
+```
 
 # References
 
