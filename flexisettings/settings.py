@@ -14,13 +14,14 @@ class FlexiSettingsProxy(object):
 
     _globals = {
         'FLEXI_SYS_PATH': ['apps', 'lib'],
+        'FLEXI_AUTORELOAD': True,
         'FLEXI_LAYOUT_DISCOVERY': False,
         'FLEXI_MEDIA_FOLDER': 'media',
         'FLEXI_STATIC_FOLDER': 'static',
         'FLEXI_TEMPLATE_FOLDERS': ('templates', ),
     }
     _settings_path = None
-    _wrapped_modules = []
+    _wrapped_modules = {}
 
     def __init__(self):
         try:
@@ -38,6 +39,10 @@ class FlexiSettingsProxy(object):
         self._import_settings()
         if self._globals['FLEXI_LAYOUT_DISCOVERY']:
             self._layout_discovery()
+        if self._globals['FLEXI_AUTORELOAD']:
+            for module, modfile in self._wrapped_modules.iteritems():
+                # add this module to sys.modules
+                sys.modules['flexisettings.wrapped.%s' % module] = MockModule(module, modfile)
 
     # old-style class attribute lookup
     def __getattr__(self, name):
@@ -135,12 +140,11 @@ class FlexiSettingsProxy(object):
             if setting == setting.upper():
                 self._globals[setting] = globals_dict[setting]
         # list this module as wrapped
-        self._wrapped_modules.append(
-            '.'.join([
-                self._get_package(self._settings_module),
-                modname
-            ])
-        )
+        module = '.'.join([
+            self._get_package(self._settings_module),
+            modname
+        ])
+        self._wrapped_modules[module] = modfile
 
     def _site_dir(self, folder):
         """return an absolute path for a folder inside FLEXI_SITE_ROOT.
@@ -230,6 +234,15 @@ class FlexiSettingsProxy(object):
                 self._globals['TEMPLATE_DIRS'] += (
                     self._project_dir(folder),
                 )
+
+
+class MockModule(object):
+    """An object mocking a module to use in sys.modules for django
+    autoreload trickery.
+    """
+    def __init__(self, name, filename):
+        self.__name__ = name
+        self.__file__ = filename
 
 
 # trick to replace the module by a class instance

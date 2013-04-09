@@ -54,6 +54,16 @@ settings depending on the defined running environment.
 List of paths to add to `sys.path` if they exist, defaults to `['apps',
 'lib']`. This will be done if `FLEXI_LAYOUT_DISCOVERY` is `True`.
 
+### FLEXI\_AUTORELOAD
+
+Boolean affecting the autoreload machinery for settings. If set to
+`True`, it should make the django autoreload code work when changing any
+settings file found in `flexisettings.settings._wrapped_modules`. If set
+to `False`, the autoreload will not work on settings. The code is a bit
+tricky, not guaranteed to work and might have unsuspected effects, hence
+the possibility to disable. Defaults to `True` to preserve django
+default behavior.
+
 ### FLEXI\_LAYOUT\_DISCOVERY
 
 Boolean that determines if `flexisettings` tries to be smart about your
@@ -201,10 +211,10 @@ $ python manage.py shell
 [...]
 >>> import flexisettings.settings
 >>> flexisettings.settings._wrapped_modules
-['testProject.env',
- 'testProject.security',
- 'testProject.settings',
- 'testProject.settings_t']
+{'testProject.env': '/path/to/django-flexisettings/t/testProject/env.py',
+ 'testProject.security': '/path/to/django-flexisettings/t/testProject/security.py',
+ 'testProject.settings': '/path/to/django-flexisettings/t/testProject/settings.py',
+ 'testProject.settings_t': '/path/to/django-flexisettings/t/testProject/settings_t.py'}
 ```
 
 # References
