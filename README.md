@@ -37,7 +37,9 @@ Read further for more powerful features of `flexisettings`.
 
 ### DJANGO\_SETTINGS\_MODULE
 
-Environment variable to set to point at `flexisettings.settings`
+Environment variable to set to point at `flexisettings.settings`, more
+details in the [django
+documentation](https://docs.djangoproject.com/en/dev/topics/settings/#envvar-DJANGO_SETTINGS_MODULE).
 
 ### FLEXI\_WRAPPED\_MODULE
 
