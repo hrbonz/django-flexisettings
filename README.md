@@ -58,7 +58,7 @@ List of paths to add to `sys.path` if they exist, defaults to `['apps',
 
 Boolean that determines if `flexisettings` tries to be smart about your
 project layout. It will add any `FLEXI_MEDIA_FOLDER`, `FLEXI_STATIC_FOLDER`,
-`FLEXI_TEMPLATES_FOLDERS` folder to the appropriate configuration variables if
+`FLEXI_TEMPLATE_FOLDERS` folder to the appropriate configuration variables if
 they are not already set.
 
 ### FLEXI\_MEDIA\_FOLDER
@@ -71,9 +71,9 @@ The media folder name to look for when doing layout discovery, defaults to
 The static folder name to look for when doing layout discovery, defaults to
 `'static'`.
 
-### FLEXI\_TEMPLATES\_FOLDERS
+### FLEXI\_TEMPLATE\_FOLDERS
 
-A tuple of templates folder names to look for when doing layout discovery,
+A tuple of template folder names to look for when doing layout discovery,
 defaults to `('templates', )`.
 
 ### FLEXI\_SITE\_ROOT

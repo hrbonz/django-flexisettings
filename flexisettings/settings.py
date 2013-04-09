@@ -17,7 +17,7 @@ class FlexiSettingsProxy(object):
         'FLEXI_LAYOUT_DISCOVERY': False,
         'FLEXI_MEDIA_FOLDER': 'media',
         'FLEXI_STATIC_FOLDER': 'static',
-        'FLEXI_TEMPLATES_FOLDERS': ('templates', ),
+        'FLEXI_TEMPLATE_FOLDERS': ('templates', ),
     }
     _settings_path = None
     _wrapped_modules = []
@@ -224,7 +224,7 @@ class FlexiSettingsProxy(object):
                 self._globals['STATIC_ROOT'] = self._project_dir(folder)
 
         # add templates folder if not in TEMPLATE_DIRS
-        for folder in self._globals['FLEXI_TEMPLATES_FOLDERS']:
+        for folder in self._globals['FLEXI_TEMPLATE_FOLDERS']:
             if self._is_project_dir(folder) \
                 not in self._globals['TEMPLATE_DIRS']:
                 self._globals['TEMPLATE_DIRS'] += (
