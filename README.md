@@ -24,9 +24,11 @@ $ pip install django-flexisettings
 
 # Quickstart
 
-In development, edit `manage.py`, modify the value of
-`DJANGO_SETTINGS_MODULE` to point at `flexisettings.settings` and add
-`FLEXI_WRAPPED_MODULE` to point at you project's settings:
+## Development
+
+Edit `manage.py`, modify the value of `DJANGO_SETTINGS_MODULE` to point
+at `flexisettings.settings` and add `FLEXI_WRAPPED_MODULE` to point at
+you project's settings:
 ```
 [...]
 if __name__ == "__main__":
@@ -34,6 +36,27 @@ if __name__ == "__main__":
     os.environ.setdefault("FLEXI_WRAPPED_MODULE", "myproject.settings")
 [...]
 ```
+
+
+## Production
+
+Edit `myproject/wsgi.py`, modify the value of `DJANGO_SETTINGS_MODULE`
+to point at `flexisettings.settings` and add `FLEXI_WRAPPED_MODULE` to
+point at you project's settings:
+```
+[...]
+import os
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flexisettings.settings")
+os.environ.setdefault("FLEXI_WRAPPED_MODULE", "myproject.settings")
+[...]
+```
+
+To run the project with gunicorn, check the paragraph "Gunicorn
+configuration".
+
+
+## ALL GLORY TO FLEXISETTINGS
 
 This is all you need to get `flexisettings` to run your settings. At
 this stage, **nothing** in the configuration object is changed, it is
@@ -206,6 +229,46 @@ The modules are loaded in the following order :
 3. `myproject/security_RUN_ENV.py`
 4. `myproject/settings.py`
 5. `myproject/settings_RUN_ENV.py`
+
+
+# Gunicorn configuration
+
+Following [django's
+recommandations](https://docs.djangoproject.com/en/1.5/howto/deployment/wsgi/gunicorn/)
+on how to use gunicorn, the project will run in WSGI mode.
+
+First edit the `myproject/wsgi.py` file as shown in the "Quickstart"
+paragraph.
+
+## Command line
+
+    $ cd /path/to/myproject
+    $ /path/to/venv/bin/python gunicorn --workers=42 myproject.wsgi:application
+
+## Debian
+
+The configuration file for gunicorn should be saved as
+`/etc/gunicorn.d/myproject` and contain:
+
+```
+CONFIG = {
+    'python': '/path/to/venv/bin/python',
+    'working_dir': '/path/to/myproject',
+    'user': 'www-data',
+    'group': 'www-data',
+    'args': (
+        'myproject.wsgi:application',
+    ),
+}
+```
+
+Extra options that could be useful in the `args` tuple:
+
+* `'--bind=ip:port'`: set which ip and port the process whould bind to
+* `'--workers=#'`: set the number of workers to spawn
+
+For more information on gunicorn configuration, [read the
+docs](http://docs.gunicorn.org/en/latest/configure.html).
 
 
 # Security files
