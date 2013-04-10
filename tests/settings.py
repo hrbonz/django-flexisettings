@@ -1,4 +1,4 @@
-import unittest2
+import unittest2 as unittest
 from tests.base import BaseTestCase
 import os
 
@@ -25,4 +25,4 @@ class SettingsTestCase(BaseTestCase):
         self.assertEqual(flexisettings.settings.SECRET_KEY, self.secret_key)
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

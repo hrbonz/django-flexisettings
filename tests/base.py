@@ -1,4 +1,4 @@
-import unittest2
+import unittest2 as unittest
 import sys
 import os
 import shutil
@@ -6,7 +6,7 @@ import shutil
 from django.core.management import call_command
 
 
-class BaseTestCase(unittest2.TestCase):
+class BaseTestCase(unittest.TestCase):
 
     test_folder = 't'
     test_project = 'testProject'
