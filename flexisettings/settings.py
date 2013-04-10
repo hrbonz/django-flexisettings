@@ -14,10 +14,14 @@ class FlexiSettingsProxy(object):
 
     _globals = {
         'FLEXI_SYS_PATH': ['apps', 'lib'],
+        'FLEXI_AUTORELOAD': True,
         'FLEXI_LAYOUT_DISCOVERY': False,
+        'FLEXI_MEDIA_FOLDER': 'media',
+        'FLEXI_STATIC_FOLDER': 'static',
+        'FLEXI_TEMPLATE_FOLDERS': ('templates', ),
     }
     _settings_path = None
-    _wrapped_modules = []
+    _wrapped_modules = {}
 
     def __init__(self):
         try:
@@ -35,6 +39,10 @@ class FlexiSettingsProxy(object):
         self._import_settings()
         if self._globals['FLEXI_LAYOUT_DISCOVERY']:
             self._layout_discovery()
+        if self._globals['FLEXI_AUTORELOAD']:
+            for module, modfile in self._wrapped_modules.iteritems():
+                # add this module to sys.modules
+                sys.modules['flexisettings.wrapped.%s' % module] = MockModule(module, modfile)
 
     # old-style class attribute lookup
     def __getattr__(self, name):
@@ -80,6 +88,12 @@ class FlexiSettingsProxy(object):
         return os.path.dirname(modfile)
 
     def _import_settings(self, quiet=True):
+        """Get the settings imported in the proper order and depending
+        on FLEXI_RUN_ENV variable.
+
+        :param quiet: quietly fail if settings file does not exist
+        :type quiet: bool
+        """
         # import running environment
         self._import('env')
         # env variable supersedes file configuration
@@ -98,6 +112,13 @@ class FlexiSettingsProxy(object):
 
     def _import(self, modname, quiet=True):
         """import settings module and push configuration values to global scope
+
+        The import order is as follow:
+            * env.py
+            * security.py
+            * security_<FLEXI_RUN_ENV>.py, if FLEXI_RUN_ENV is set
+            * settings.py, raises an IOError exception if missing
+            * settings_<FLEXI_RUN_ENV>.py, if FLEXI_RUN_ENV is set
 
         :param modname: settings module name without package path, only
         the last part of a dotted name
@@ -119,26 +140,56 @@ class FlexiSettingsProxy(object):
             if setting == setting.upper():
                 self._globals[setting] = globals_dict[setting]
         # list this module as wrapped
-        self._wrapped_modules.append(
-            '.'.join([
-                self._get_package(self._settings_module),
-                modname
-            ])
-        )
+        module = '.'.join([
+            self._get_package(self._settings_module),
+            modname
+        ])
+        self._wrapped_modules[module] = modfile
 
     def _site_dir(self, folder):
+        """return an absolute path for a folder inside FLEXI_SITE_ROOT.
+
+        :param folder: a folder name
+        :type folder: str
+        """
         return os.path.join(self._globals['FLEXI_SITE_ROOT'], folder)
 
     def _is_site_dir(self, folder):
+        """returns a True if folder exists inside FLEXI_SITE_ROOT
+        folder.
+
+        :param folder: a folder name
+        :type folder: str
+        """
         return os.path.isdir(self._site_dir(folder))
 
     def _project_dir(self, folder):
+        """return an absolute path for a folder inside
+        FLEXI_PROJECT_ROOT.
+
+        :param folder: a folder name
+        :type folder: str
+        """
         return os.path.join(self._globals['FLEXI_PROJECT_ROOT'], folder)
 
     def _is_project_dir(self, folder):
+        """returns a True if folder exists inside FLEXI_PROJECT_ROOT
+        folder.
+
+        :param folder: a folder name
+        :type folder: str
+        """
         return os.path.isdir(self._project_dir(folder))
 
     def _layout_discovery(self):
+        """perform layout detection:
+            * set FLEXI_PROJECT_ROOT
+            * set FLEXI_SITE_ROOT
+            * add folders from FLEXI_SYS_PATH to sys.path
+            * set MEDIA_ROOT
+            * set STATIC_ROOT
+            * add template folders to TEMPLATE_DIRS
+        """
         # if project path is not specified, assume it's under the
         # settings folder
         if 'FLEXI_PROJECT_ROOT' not in self._globals:
@@ -161,25 +212,37 @@ class FlexiSettingsProxy(object):
         # add media folder if MEDIA_ROOT is not already set or is empty
         if 'MEDIA_ROOT' not in self._globals \
             or not self._globals['MEDIA_ROOT']:
-            if self._is_site_dir('media'):
-                self._globals['MEDIA_ROOT'] = self._site_dir('media')
-            elif self._is_project_dir('media'):
-                self._globals['MEDIA_ROOT'] = self._project_dir('media')
+            folder = self._globals['FLEXI_MEDIA_FOLDER']
+            if self._is_site_dir(folder):
+                self._globals['MEDIA_ROOT'] = self._site_dir(folder)
+            elif self._is_project_dir(folder):
+                self._globals['MEDIA_ROOT'] = self._project_dir(folder)
 
         # add static folder if STATIC_ROOT is not already set or is empty
         if 'STATIC_ROOT' not in self._globals \
             or not self._globals['STATIC_ROOT']:
-            if self._is_site_dir('static'):
-                self._globals['STATIC_ROOT'] = self._site_dir('static')
-            elif self._is_project_dir('static'):
-                self._globals['STATIC_ROOT'] = self._project_dir('static')
+            folder = self._globals['FLEXI_STATIC_FOLDER']
+            if self._is_site_dir(folder):
+                self._globals['STATIC_ROOT'] = self._site_dir(folder)
+            elif self._is_project_dir(folder):
+                self._globals['STATIC_ROOT'] = self._project_dir(folder)
 
         # add templates folder if not in TEMPLATE_DIRS
-        if self._is_project_dir('templates') \
-            not in self._globals['TEMPLATE_DIRS']:
-            self._globals['TEMPLATE_DIRS'] += (
-                self._project_dir('templates'),
-            )
+        for folder in self._globals['FLEXI_TEMPLATE_FOLDERS']:
+            if self._is_project_dir(folder) \
+                not in self._globals['TEMPLATE_DIRS']:
+                self._globals['TEMPLATE_DIRS'] += (
+                    self._project_dir(folder),
+                )
+
+
+class MockModule(object):
+    """An object mocking a module to use in sys.modules for django
+    autoreload trickery.
+    """
+    def __init__(self, name, filename):
+        self.__name__ = name
+        self.__file__ = filename
 
 
 # trick to replace the module by a class instance
