@@ -30,6 +30,7 @@ References
 * `Django project <https://www.djangoproject.com/>`_
 * `Django settings <https://docs.djangoproject.com/en/dev/topics/settings/>`_
 * `Splitting up the settings file <https://code.djangoproject.com/wiki/SplitSettings>`_
+* `PyPI django-flexisettings <https://pypi.python.org/pypi/django-flexisettings>`_
 
 
 Project layouts
