@@ -13,6 +13,7 @@
 
 import sys, os
 
+sys.path.append('..')
 import flexisettings
 
 # If extensions (or modules to document with autodoc) are in another directory,
