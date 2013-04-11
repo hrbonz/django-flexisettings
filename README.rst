@@ -37,8 +37,8 @@ project's settings::
     [...]
 
 
-Production
-^^^^^^^^^^
+WSGI application
+^^^^^^^^^^^^^^^^
 
 Edit ``myproject/wsgi.py``, modify the value of ``DJANGO_SETTINGS_MODULE``
 to point at ``flexisettings.settings`` and add ``FLEXI_WRAPPED_MODULE`` to
