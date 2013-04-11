@@ -37,6 +37,7 @@ project's settings::
     [...]
 
 
+.. _wsgi-app-conf:
 WSGI application
 ^^^^^^^^^^^^^^^^
 
