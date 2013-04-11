@@ -1,4 +1,4 @@
-import unittest2
+import unittest2 as unittest
 import sys
 import os
 
@@ -6,6 +6,10 @@ from tests.base import BaseTestCase
 
 
 class ImportTestCase(BaseTestCase):
+
+    # it is necessary to run those tests in that order to avoid
+    # namespace pollution with imported module
+    tests = ['test_import_without_env', 'test_import', 'test_import_local']
 
     def test_import_without_env(self):
         """Test importing flexisettings without setting environment
@@ -42,13 +46,11 @@ class ImportTestCase(BaseTestCase):
             flexisettings.settings._wrapped_modules
         )
 
-def suite():
-    # it is necessary to run those tests in that order to avoid
-    # namespace pollution with imported module
-    tests = ['test_import_without_env', 'test_import', 'test_import_local']
-    return unittest2.TestSuite(map(ImportTestCase, tests))
+
+# use the load_tests protocol to change the order of detected tests
+def load_tests(loader, standard_tests, pattern):
+    tests = unittest.TestSuite(map(ImportTestCase, ImportTestCase.tests))
+    return tests
 
 if __name__ == "__main__":
-    runner = unittest2.TextTestRunner()
-    test_suite = suite()
-    runner.run(test_suite)
+    unittest.main()

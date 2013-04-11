@@ -1,4 +1,4 @@
-import unittest2
+import unittest2 as unittest
 from tests.base import BaseTestCase
 import os
 
@@ -51,4 +51,4 @@ class DiscoveryTestCase(BaseTestCase):
         )
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

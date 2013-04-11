@@ -204,9 +204,11 @@ class FlexiSettingsProxy(object):
 
         # add paths FLEXI_SYS_PATH to sys.path if they exist
         for folder in self._globals['FLEXI_SYS_PATH']:
-            if self._is_project_dir(folder):
+            if self._is_project_dir(folder) \
+                and self._project_dir(folder) not in sys.path:
                 sys.path.insert(0, self._project_dir(folder))
-            elif self._is_site_dir(folder):
+            elif self._is_site_dir(folder) \
+                and self._site_dir(folder) not in sys.path:
                 sys.path.insert(0, self._site_dir(folder))
 
         # add media folder if MEDIA_ROOT is not already set or is empty
