@@ -14,7 +14,7 @@ class TestCommand(Command):
     user_options = []
 
     def initialize_options(self):
-        self._dir = os.getcwd()
+        pass
 
     def finalize_options(self):
         pass
