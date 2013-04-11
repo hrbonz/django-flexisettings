@@ -1,3 +1,9 @@
-include LICENSE README.md
-recursive-include docs *
+# include basic files
+include LICENSE README.rst
+
+# include tests
 recursive-include tests *
+
+# include sphinx docs
+recursive-include docs *.py *.rst Makefile
+prune docs/_build
