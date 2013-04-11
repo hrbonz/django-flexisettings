@@ -13,8 +13,8 @@ Configuration
 
 .. include development configuration from README file
 .. include:: ../README.rst
-   :start-line: 26
-   :end-line: 52
+   :start-line: 27
+   :end-line: 57
 
 Gunicorn
 ^^^^^^^^
