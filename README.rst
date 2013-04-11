@@ -63,7 +63,7 @@ This is all you need to get ``flexisettings`` to run your settings. At
 this stage, **nothing** in the configuration object is changed, it is
 simply wrapped in ``flexisettings`` proxy object.
 
-[Read the docs](https://django-flexisettings.readthedocs.org/) for more
+`Read the docs <https://django-flexisettings.readthedocs.org/>`_ for more
 powerful features of ``flexisettings``.
 
 
