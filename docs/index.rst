@@ -3,15 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to django-flexisettings's documentation!
-================================================
+Welcome to django-flexisettings
+===============================
 
 .. include only the intro part of README file
 .. include:: ../README.rst
    :start-line: 4
    :end-line: 12
 
-Contents:
+
+Documentation
+-------------
 
 .. toctree::
    :maxdepth: 2
