@@ -2,7 +2,6 @@
 import os
 from distutils.core import setup, Command
 import flexisettings
-from tests.run import runtests
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
@@ -20,6 +19,7 @@ class TestCommand(Command):
         pass
 
     def run(self):
+        from tests.run import runtests
         runtests()
 
 
@@ -33,8 +33,8 @@ setup(
     license='3-clause BSD licence, see LICENCE.txt',
     description='Django flexible settings with running environment support, separate security files and project layout detection.',
     long_description=README,
-    cmdclass = { 'test': TestCommand },
-    classifiers = [
+    cmdclass={ 'test': TestCommand },
+    classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
