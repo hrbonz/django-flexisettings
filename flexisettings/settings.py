@@ -37,6 +37,15 @@ class FlexiSettingsProxy(object):
         self._settings_path = self._get_mod_dir(settings_module)
 
         self._import_settings()
+        # define the verbosity of flexisettings based on 'DEBUG' if it
+        # was not set
+        if 'FLEXI_VERBOSE' not in self._globals:
+            self._globals['FLEXI_VERBOSE'] = self._globals['DEBUG']
+
+        # print wrapped configuration files
+        self._vprint("Loaded configuration: %s" % \
+            ', '.join(self._wrapped_modules.keys()))
+
         if self._globals['FLEXI_LAYOUT_DISCOVERY']:
             self._layout_discovery()
         if self._globals['FLEXI_AUTORELOAD']:
@@ -60,6 +69,15 @@ class FlexiSettingsProxy(object):
 
     def __dir__(self):
         return dir(object) + self._globals.keys()
+
+    def _vprint(self, msg):
+        """prints msg when in verbose mode.
+
+        :param msg: a message to print
+        :type msg: str
+        """
+        if self._globals['FLEXI_VERBOSE']:
+            print(msg)
 
     def _get_package(self, module):
         """return a package string extracted from a module import string.
@@ -217,8 +235,12 @@ class FlexiSettingsProxy(object):
             folder = self._globals['FLEXI_MEDIA_FOLDER']
             if self._is_site_dir(folder):
                 self._globals['MEDIA_ROOT'] = self._site_dir(folder)
+                self._vprint('Detected MEDIA_ROOT: %s' % \
+                    self._globals['MEDIA_ROOT'])
             elif self._is_project_dir(folder):
                 self._globals['MEDIA_ROOT'] = self._project_dir(folder)
+                self._vprint('Detected MEDIA_ROOT: %s' % \
+                    self._globals['MEDIA_ROOT'])
 
         # add static folder if STATIC_ROOT is not already set or is empty
         if 'STATIC_ROOT' not in self._globals \
@@ -226,8 +248,12 @@ class FlexiSettingsProxy(object):
             folder = self._globals['FLEXI_STATIC_FOLDER']
             if self._is_site_dir(folder):
                 self._globals['STATIC_ROOT'] = self._site_dir(folder)
+                self._vprint('Detected STATIC_ROOT: %s' % \
+                    self._globals['STATIC_ROOT'])
             elif self._is_project_dir(folder):
                 self._globals['STATIC_ROOT'] = self._project_dir(folder)
+                self._vprint('Detected STATIC_ROOT: %s' % \
+                    self._globals['STATIC_ROOT'])
 
         # add templates folder if not in TEMPLATE_DIRS
         for folder in self._globals['FLEXI_TEMPLATE_FOLDERS']:
@@ -236,6 +262,9 @@ class FlexiSettingsProxy(object):
                 self._globals['TEMPLATE_DIRS'] += (
                     self._project_dir(folder),
                 )
+        if self._globals['TEMPLATE_DIRS']:
+            self._vprint('Detected TEMPLATE_DIRS: %s' % \
+                ', '.join(self._globals['TEMPLATE_DIRS']))
 
 
 class MockModule(object):

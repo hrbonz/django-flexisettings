@@ -38,6 +38,13 @@ String defining the running environment, used when trying to load settings
 depending on the defined running environment.
 
 
+FLEXI_VERBOSE
+^^^^^^^^^^^^^
+
+Default: ``DEBUG``
+
+Used to define the verbosity of flexisettings when loading.
+
 FLEXI_SYS_PATH
 ^^^^^^^^^^^^^^
 
