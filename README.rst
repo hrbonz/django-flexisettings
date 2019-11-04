@@ -12,6 +12,10 @@ Features:
     * automatic discovery and configuration of common project layouts
 
 
+Information:
+    * v0.2.5 is the last version which supports python 2.7
+
+
 Installation
 ------------
 

@@ -40,7 +40,7 @@ class FlexiSettingsProxy(object):
         if self._globals['FLEXI_LAYOUT_DISCOVERY']:
             self._layout_discovery()
         if self._globals['FLEXI_AUTORELOAD']:
-            for module, modfile in self._wrapped_modules.iteritems():
+            for module, modfile in self._wrapped_modules.items():
                 # add this module to sys.modules
                 sys.modules['flexisettings.wrapped.%s' % module] = MockModule(module, modfile)
 
@@ -59,7 +59,7 @@ class FlexiSettingsProxy(object):
         return object.__getattribute__(self, name)
 
     def __dir__(self):
-        return dir(object) + self._globals.keys()
+        return dir(object) + list(self._globals.keys())
 
     def _get_package(self, module):
         """return a package string extracted from a module import string.
@@ -127,12 +127,12 @@ class FlexiSettingsProxy(object):
         :type quiet: bool
         """
         modfile = os.path.join(self._settings_path, modname) + '.py'
-        globals_dict = dict(globals().items() + self._globals.items())
+        globals_dict = {**globals(), **self._globals}
         # if the file doesn't exist but we want a quiet error
         if not os.path.isfile(modfile) and quiet:
             return
 
-        execfile(modfile, globals_dict)
+        exec(open(modfile).read(), globals_dict)
         # get which variables were set in modfile
         settings = set(globals_dict.keys()) - set(globals().keys())
         # push settings in _globals dict
