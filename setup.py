@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import setuptools
 from distutils.core import setup, Command
 import flexisettings
 
